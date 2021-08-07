@@ -1,7 +1,7 @@
 
-//MyMandolin inst  => dac; 
-MyAddi0 inst => JCRev r => dac;
-//Flute inst => JCRev r => dac;
+
+MyAddi0 inst => dac;
+//MyMandolin inst => dac;
 //ModalBar inst => JCRev r => dac;
 //BandedWG inst => JCRev r => dac;
 //Moog inst => JCRev r => dac;
@@ -11,19 +11,20 @@ MyAddi0 inst => JCRev r => dac;
 //Sitar inst => JCRev r => dac;
 //Bowed inst => JCRev r => dac;
 
-0.75 => r.gain;
-0.025 => r.mix;
-
-[ 61, 63, 65, 66, 68, 66, 68, 63 ] @=> int notes[];
+[ 61, 63, 65, 66, 68, 66, 67, 62 ] @=> int notes[];
 
 while( true ) {
-    Math.random2(2, 3) => int off;
+    Math.random2(-2, 3) => int off;
+    Math.random2(1, 4) => int speed;
+    <<<"offset speed:", off, speed>>>;
     for( int i; i < notes.size(); i++ ) {
         Std.mtof( notes[i] + off) => inst.freq;
         0.1 => inst.noteOn;
-        200::ms => now;
+        (100 * speed)::ms => now;
         0.1 => inst.noteOff;
-        220::ms => now;
+        0.2::second => now;
     }
 }
+
+
 
