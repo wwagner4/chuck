@@ -5,7 +5,7 @@ class MyAddi1 extends Chugraph {
     SinOsc osc1 => env;
     SinOsc osc2 => env;
     SinOsc osc3 => env;
-    env => dac;
+    env => outlet;
 
     env.set(0.01 :: second, 0.2 :: second, 0.5, 0.2 :: second);
     0.1 => float gainBase;
@@ -62,19 +62,19 @@ fun float[] ranWeights() {
 }
 
 
-MyAddi1 inst => JCRev r => Gain g => dac;
+ MyAddi1 inst => JCRev r => dac;
 
-0.75 => r.gain;
-0.025 => r.mix;
-0.01 => g.gain;
+0.005 => r.mix;
+0.5 => r.gain;
+
+<<<"jcrev gain:", r.gain()>>>;
+<<<"inst gain:", inst.gain()>>>;
 
 [ 63, 63, 60, 63, 65, 67] @=> int notes[];
-[ 1,  3,  1,  1,  1,  1] @=> int noteLengths[];
-
-<<<"gain:", g.gain>>>;
+[ 1,  2,  1,  2,  2,  4] @=> int noteLengths[];
 
 for(0 => int i; i < 3; i++) {
-    i => int off;
+    3 => int off;
     ranWeights() @=> float ws[];
     ws @=> inst.weights;
     <<<"offset:", off, "weights:", ws[0], ws[1], ws[2]>>>;
@@ -83,8 +83,9 @@ for(0 => int i; i < 3; i++) {
         0.1 => inst.noteOn;
         200 * noteLengths[i]::ms => now;
         0.1 => inst.noteOff;
-        220::ms => now;
+        100::ms => now;
     }
 }
+400::ms => now;
 
 
